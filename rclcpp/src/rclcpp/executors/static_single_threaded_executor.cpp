@@ -249,7 +249,9 @@ StaticSingleThreadedExecutor::execute_ready_executables(bool spin_once)
   for (size_t i = 0; i < wait_set_.size_of_services; ++i) {
     if (i < entities_collector_->get_number_of_services()) {
       if (wait_set_.services[i]) {
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
         execute_service(entities_collector_->get_service(i));
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
         if (spin_once) {
           return true;
         }

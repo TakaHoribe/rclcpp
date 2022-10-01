@@ -33,7 +33,9 @@ SingleThreadedExecutor::spin()
   while (rclcpp::ok(this->context_) && spinning.load()) {
     rclcpp::AnyExecutable any_executable;
     if (get_next_executable(any_executable)) {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
       execute_any_executable(any_executable);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     }
   }
 }

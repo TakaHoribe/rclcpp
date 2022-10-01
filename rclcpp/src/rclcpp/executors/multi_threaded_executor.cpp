@@ -103,7 +103,9 @@ MultiThreadedExecutor::run(size_t)
       std::this_thread::yield();
     }
 
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     execute_any_executable(any_exec);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 
     if (any_exec.timer) {
       auto high_priority_wait_mutex = wait_mutex_.get_high_priority_lockable();

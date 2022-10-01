@@ -435,6 +435,7 @@ void Executor::spin_all(std::chrono::nanoseconds max_duration)
 void
 Executor::spin_some_impl(std::chrono::nanoseconds max_duration, bool exhaustive)
 {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   auto start = std::chrono::steady_clock::now();
   auto max_duration_not_elapsed = [max_duration, start]() {
       if (std::chrono::nanoseconds(0) == max_duration) {
@@ -459,7 +460,9 @@ Executor::spin_some_impl(std::chrono::nanoseconds max_duration, bool exhaustive)
       wait_for_work(std::chrono::milliseconds::zero());
     }
     if (get_next_ready_executable(any_exec)) {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
       execute_any_executable(any_exec);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
       work_available = true;
     } else {
       if (!work_available || !exhaustive) {
@@ -468,6 +471,7 @@ Executor::spin_some_impl(std::chrono::nanoseconds max_duration, bool exhaustive)
       work_available = false;
     }
   }
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 void
@@ -475,7 +479,9 @@ Executor::spin_once_impl(std::chrono::nanoseconds timeout)
 {
   AnyExecutable any_exec;
   if (get_next_executable(any_exec, timeout)) {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     execute_any_executable(any_exec);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   }
 }
 
@@ -522,10 +528,14 @@ Executor::execute_any_executable(AnyExecutable & any_exec)
     execute_subscription(any_exec.subscription);
   }
   if (any_exec.service) {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     execute_service(any_exec.service);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   }
   if (any_exec.client) {
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     execute_client(any_exec.client);
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   }
   if (any_exec.waitable) {
     any_exec.waitable->execute(any_exec.data);
@@ -657,11 +667,13 @@ Executor::execute_service(rclcpp::ServiceBase::SharedPtr service)
 {
   auto request_header = service->create_request_header();
   std::shared_ptr<void> request = service->create_request();
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   take_and_do_error_handling(
     "taking a service server request from service",
     service->get_service_name(),
     [&]() {return service->take_type_erased_request(request.get(), *request_header);},
     [&]() {service->handle_request(request_header, request);});
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 void
@@ -670,11 +682,13 @@ Executor::execute_client(
 {
   auto request_header = client->create_request_header();
   std::shared_ptr<void> response = client->create_response();
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   take_and_do_error_handling(
     "taking a service client response from service",
     client->get_service_name(),
     [&]() {return client->take_type_erased_response(response.get(), *request_header);},
     [&]() {client->handle_response(request_header, response);});
+std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 void

@@ -337,17 +337,28 @@ public:
     auto typed_request = std::static_pointer_cast<typename ServiceT::Request>(request);
     auto response = std::make_shared<typename ServiceT::Response>();
     any_callback_.dispatch(request_header, typed_request, response);
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     send_response(*request_header, *response);
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   }
 
   void
   send_response(rmw_request_id_t & req_id, typename ServiceT::Response & response)
   {
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
+
     rcl_ret_t ret = rcl_send_response(get_service_handle().get(), &req_id, &response);
 
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
+
     if (ret != RCL_RET_OK) {
+      std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
+
       rclcpp::exceptions::throw_from_rcl_error(ret, "failed to send response");
+
+      std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
     }
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   }
 
 private:

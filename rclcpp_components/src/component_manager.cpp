@@ -37,15 +37,19 @@ ComponentManager::ComponentManager(
 : Node(std::move(node_name), node_options),
   executor_(executor)
 {
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   loadNode_srv_ = create_service<LoadNode>(
     "~/_container/load_node",
     std::bind(&ComponentManager::OnLoadNode, this, _1, _2, _3));
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   unloadNode_srv_ = create_service<UnloadNode>(
     "~/_container/unload_node",
     std::bind(&ComponentManager::OnUnloadNode, this, _1, _2, _3));
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   listNodes_srv_ = create_service<ListNodes>(
     "~/_container/list_nodes",
     std::bind(&ComponentManager::OnListNodes, this, _1, _2, _3));
+  std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 ComponentManager::~ComponentManager()
@@ -127,6 +131,7 @@ ComponentManager::OnLoadNode(
   const std::shared_ptr<LoadNode::Request> request,
   std::shared_ptr<LoadNode::Response> response)
 {
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   (void) request_header;
 
   try {
@@ -214,6 +219,7 @@ ComponentManager::OnLoadNode(
       response->full_node_name = node->get_fully_qualified_name();
       response->unique_id = node_id;
       response->success = true;
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
       return;
     }
     RCLCPP_ERROR(
@@ -227,6 +233,7 @@ ComponentManager::OnLoadNode(
     response->error_message = ex.what();
     response->success = false;
   }
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 void
@@ -235,6 +242,7 @@ ComponentManager::OnUnloadNode(
   const std::shared_ptr<UnloadNode::Request> request,
   std::shared_ptr<UnloadNode::Response> response)
 {
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   (void) request_header;
 
   auto wrapper = node_wrappers_.find(request->unique_id);
@@ -252,6 +260,7 @@ ComponentManager::OnUnloadNode(
     node_wrappers_.erase(wrapper);
     response->success = true;
   }
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 void
@@ -260,6 +269,7 @@ ComponentManager::OnListNodes(
   const std::shared_ptr<ListNodes::Request> request,
   std::shared_ptr<ListNodes::Response> response)
 {
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
   (void) request_header;
   (void) request;
 
@@ -268,6 +278,7 @@ ComponentManager::OnListNodes(
     response->full_node_names.push_back(
       wrapper.second.get_node_base_interface()->get_fully_qualified_name());
   }
+    std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << std::endl;
 }
 
 }  // namespace rclcpp_components
