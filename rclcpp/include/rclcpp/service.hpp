@@ -343,10 +343,28 @@ public:
   void
   send_response(rmw_request_id_t & req_id, typename ServiceT::Response & response)
   {
+    std::cerr << "service-horibe-test" << std::endl;
     rcl_ret_t ret = rcl_send_response(get_service_handle().get(), &req_id, &response);
 
     if (ret != RCL_RET_OK) {
-      rclcpp::exceptions::throw_from_rcl_error(ret, "failed to send response");
+
+      std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << ", fail to send response. i = 0. ret = " << ret << std::endl;
+
+      rcl_ret_t ret_2 = RCL_RET_NOT_INIT;
+      for (size_t i = 1; i < 100; ++i) {
+        rclcpp::sleep_for(std::chrono::milliseconds(100));
+        ret_2 = rcl_send_response(get_service_handle().get(), &req_id, &response);
+        std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << ", fail to send response. i = " << i << ". ret = " << ret << std::endl;
+        if (ret_2 == RCL_RET_OK) {
+          std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << ", success to send response! i = " << i << ". ret = " << ret << std::endl;
+          break;
+        }
+      }
+
+      if (ret_2 != RCL_RET_OK) {
+        std::cerr << "-- service debug -- file: " << __FILE__ << ", func: " << __func__ << ", line: " << __LINE__ << ", fail to send response for 100 times try." << std::endl;
+        rclcpp::exceptions::throw_from_rcl_error(ret, "failed to send response");
+      }
     }
   }
 
